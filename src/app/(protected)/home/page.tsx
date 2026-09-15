@@ -1,4 +1,4 @@
-import { Building2, Info, ShieldCheck } from "lucide-react";
+import { Beef, Building2, Info, ShieldCheck } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,6 +24,20 @@ export default function HomePage() {
             <li className="flex gap-3"><Info className="mt-1 size-4 shrink-0 text-orange-600" />Consulta, cadastro e edição de proprietários.</li>
             <li className="flex gap-3"><Info className="mt-1 size-4 shrink-0 text-orange-600" />Gestão das fazendas vinculadas a cada proprietário.</li>
             <li className="flex gap-3"><Info className="mt-1 size-4 shrink-0 text-orange-600" />Ativação e desativação de cadastros quando necessário.</li>
+          </ul>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center gap-3">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-orange-50 text-orange-600"><Beef className="size-5" /></span>
+          <CardTitle>Gestão de abates</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="flex flex-col gap-3 text-sm leading-6 text-zinc-700">
+            <li className="flex gap-3"><Info className="mt-1 size-4 shrink-0 text-orange-600" />Consulte a listagem com filtros e cadastre abates com dados gerais, etapa Fazenda e etapa Frigorífico.</li>
+            <li className="flex gap-3"><Info className="mt-1 size-4 shrink-0 text-orange-600" />Registre pesagens, quantidades, acabamento, classificação e distribuição de peso.</li>
+            <li className="flex gap-3"><Info className="mt-1 size-4 shrink-0 text-orange-600" />Adicione fotos das etapas e gere relatórios em PDF.</li>
           </ul>
         </CardContent>
       </Card>

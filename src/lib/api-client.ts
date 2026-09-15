@@ -20,8 +20,34 @@ type ApiFetchOptions = RequestInit & {
 
 export async function apiFetch<T>(
   path: string,
-  { redirectOnUnauthorized = true, ...init }: ApiFetchOptions = {},
+  options: ApiFetchOptions = {},
 ): Promise<T> {
+  const response = await fetchApi(path, options);
+
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  const contentType = response.headers.get("content-type");
+  if (!contentType?.includes("application/json")) {
+    return undefined as T;
+  }
+
+  return (await response.json()) as T;
+}
+
+export async function apiFetchBlob(
+  path: string,
+  options: ApiFetchOptions = {},
+): Promise<Blob> {
+  const response = await fetchApi(path, options);
+  return response.blob();
+}
+
+async function fetchApi(
+  path: string,
+  { redirectOnUnauthorized = true, ...init }: ApiFetchOptions,
+) {
   const headers = new Headers(init.headers);
   if (init.body && !(init.body instanceof FormData)) {
     headers.set("Content-Type", "application/json");
@@ -56,17 +82,7 @@ export async function apiFetch<T>(
         : "Não foi possível concluir a solicitação.";
     throw new ApiError(body.error || fallback, response.status);
   }
-
-  if (response.status === 204) {
-    return undefined as T;
-  }
-
-  const contentType = response.headers.get("content-type");
-  if (!contentType?.includes("application/json")) {
-    return undefined as T;
-  }
-
-  return (await response.json()) as T;
+  return response;
 }
 
 export function getErrorMessage(error: unknown) {

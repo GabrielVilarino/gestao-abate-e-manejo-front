@@ -10,5 +10,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/proprietarios/:path*"],
+  matcher: ["/proprietarios/:path*", "/abates/:path*"],
 };

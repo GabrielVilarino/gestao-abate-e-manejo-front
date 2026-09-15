@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, LoaderCircle, LogOut } from "lucide-react";
+import { Beef, Building2, LoaderCircle, LogOut } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -32,6 +32,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   const isOwners = pathname.startsWith("/proprietarios");
+  const isSlaughters = pathname.startsWith("/abates");
 
   return (
     <div className="min-h-dvh bg-zinc-50">
@@ -60,6 +61,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           >
             <Building2 className="size-5" />
             <span className="hidden sm:inline">Proprietários</span>
+          </Link>
+          <Link
+            href="/abates"
+            aria-label="Abates"
+            aria-current={isSlaughters ? "page" : undefined}
+            className={cn(
+              "inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
+              isSlaughters ? "bg-orange-50 text-orange-700" : "text-zinc-600 hover:bg-zinc-100",
+            )}
+          >
+            <Beef className="size-5" />
+            <span className="hidden sm:inline">Abates</span>
           </Link>
         </nav>
       </footer>

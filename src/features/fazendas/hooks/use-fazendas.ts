@@ -16,6 +16,7 @@ export function useFazendas(idProprietario?: number) {
   const requestFazendas = useCallback(async (targetId?: number) => {
     const requestId = ++requestIdRef.current;
     setLoadedId(undefined);
+    setFazendas([]);
     setError("");
 
     if (!targetId) {
@@ -66,7 +67,7 @@ export function useFazendas(idProprietario?: number) {
   }, [idProprietario, requestFazendas]);
 
   return {
-    fazendas,
+    fazendas: loadedId === idProprietario ? fazendas : [],
     isLoading: Boolean(idProprietario) && loadedId !== idProprietario,
     error,
     reload: load,
