@@ -1,6 +1,6 @@
 "use client";
 
-import { Beef, Building2, LoaderCircle, LogOut } from "lucide-react";
+import { Beef, Building2, CalendarDays, LoaderCircle, LogOut } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -33,6 +33,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const isOwners = pathname.startsWith("/proprietarios");
   const isSlaughters = pathname.startsWith("/abates");
+  const isSchedule = pathname.startsWith("/agenda");
 
   return (
     <div className="min-h-dvh bg-zinc-50">
@@ -73,6 +74,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           >
             <Beef className="size-5" />
             <span className="hidden sm:inline">Abates</span>
+          </Link>
+          <Link
+            href="/agenda"
+            aria-label="Agenda"
+            aria-current={isSchedule ? "page" : undefined}
+            className={cn(
+              "inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
+              isSchedule ? "bg-orange-50 text-orange-700" : "text-zinc-600 hover:bg-zinc-100",
+            )}
+          >
+            <CalendarDays className="size-5" />
+            <span className="hidden sm:inline">Agenda</span>
           </Link>
         </nav>
       </footer>
