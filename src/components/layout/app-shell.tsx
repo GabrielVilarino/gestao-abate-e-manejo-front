@@ -8,6 +8,8 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { authService } from "@/features/auth/services/auth-service";
+import { PushNotifications } from "@/features/notifications/components/push-notifications";
+import { pushSubscriptionService } from "@/features/notifications/services/push-subscription-service";
 import { getErrorMessage } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 
@@ -23,8 +25,14 @@ export function AppShell({ children, isAdmin }: { children: React.ReactNode; isA
     setError("");
     try {
       await authService.logout();
-      router.replace("/");
-      router.refresh();
+      try {
+        await pushSubscriptionService.unsubscribeFromBrowser();
+      } catch {
+        // A sessão já foi encerrada; falhas locais não impedem a navegação.
+      } finally {
+        router.replace("/");
+        router.refresh();
+      }
     } catch (logoutError) {
       setError(getErrorMessage(logoutError));
       setIsLeaving(false);
@@ -50,7 +58,7 @@ export function AppShell({ children, isAdmin }: { children: React.ReactNode; isA
         </div>
         {error ? <p role="alert" className="border-t border-red-100 bg-red-50 px-4 py-2 text-center text-sm text-red-700">{error}</p> : null}
       </header>
-      <main className="mx-auto w-full max-w-7xl px-4 pt-6 pb-[calc(5rem+env(safe-area-inset-bottom))] sm:px-6 sm:pt-8 sm:pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:px-8">{children}</main>
+      <main className="mx-auto w-full max-w-7xl px-4 pt-6 pb-[calc(5rem+env(safe-area-inset-bottom))] sm:px-6 sm:pt-8 sm:pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:px-8"><PushNotifications disabled={isLeaving} />{children}</main>
       <footer className="fixed bottom-0 left-0 z-40 w-full border-t bg-background py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] text-center">
         <nav aria-label="Navegação principal" className="flex items-center justify-center gap-1 sm:gap-2">
           <Link

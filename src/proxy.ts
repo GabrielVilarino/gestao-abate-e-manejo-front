@@ -9,6 +9,10 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
+  if (session && request.nextUrl.pathname === "/") {
+    return NextResponse.redirect(new URL("/home", request.url));
+  }
+
   if (request.nextUrl.pathname.startsWith("/usuarios") && session.role !== 1) {
     return NextResponse.redirect(new URL("/home", request.url));
   }
