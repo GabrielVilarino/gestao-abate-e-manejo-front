@@ -1,6 +1,6 @@
 "use client";
 
-import { Beef, Building2, CalendarDays, LoaderCircle, LogOut } from "lucide-react";
+import { Beef, Building2, CalendarDays, LoaderCircle, LogOut, UsersRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -11,7 +11,7 @@ import { authService } from "@/features/auth/services/auth-service";
 import { getErrorMessage } from "@/lib/api-client";
 import { cn } from "@/lib/utils";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({ children, isAdmin }: { children: React.ReactNode; isAdmin: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
   const [isLeaving, setIsLeaving] = useState(false);
@@ -34,6 +34,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isOwners = pathname.startsWith("/proprietarios");
   const isSlaughters = pathname.startsWith("/abates");
   const isSchedule = pathname.startsWith("/agenda");
+  const isUsers = pathname.startsWith("/usuarios");
 
   return (
     <div className="min-h-dvh bg-zinc-50">
@@ -87,6 +88,20 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <CalendarDays className="size-5" />
             <span className="hidden sm:inline">Agenda</span>
           </Link>
+          {isAdmin ? (
+            <Link
+              href="/usuarios"
+              aria-label="Usuários"
+              aria-current={isUsers ? "page" : undefined}
+              className={cn(
+                "inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
+                isUsers ? "bg-orange-50 text-orange-700" : "text-zinc-600 hover:bg-zinc-100",
+              )}
+            >
+              <UsersRound className="size-5" />
+              <span className="hidden sm:inline">Usuários</span>
+            </Link>
+          ) : null}
         </nav>
       </footer>
     </div>
