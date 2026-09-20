@@ -60,7 +60,7 @@ export function AppShell({ children, isAdmin }: { children: React.ReactNode; isA
       </header>
       <main className="mx-auto w-full max-w-7xl px-4 pt-6 pb-[calc(5rem+env(safe-area-inset-bottom))] sm:px-6 sm:pt-8 sm:pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:px-8"><PushNotifications disabled={isLeaving} />{children}</main>
       <footer className="fixed bottom-0 left-0 z-40 w-full border-t bg-background py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] text-center">
-        <nav aria-label="Navegação principal" className="flex items-center justify-center gap-1 sm:gap-2">
+        <nav aria-label="Navegação principal" className="flex items-center justify-around sm:justify-center gap-1 sm:gap-2">
           <Link
             href="/proprietarios"
             aria-current={isOwners ? "page" : undefined}
