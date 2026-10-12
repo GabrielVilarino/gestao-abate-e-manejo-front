@@ -34,6 +34,8 @@ export function FazendaForm({ idProprietario, fazenda, onSuccess, onCancel }: Fa
       cidade: fazenda?.cidade ?? "",
       inscricao_rural: fazenda?.inscricao_rural ?? "",
       observacao: fazenda?.observacao ?? "",
+      distancia_frigorifico: fazenda ? String(fazenda.distancia_frigorifico) : "",
+      quantidade_rebanho: fazenda ? String(fazenda.quantidade_rebanho) : "",
     },
   });
 
@@ -70,6 +72,18 @@ export function FazendaForm({ idProprietario, fazenda, onSuccess, onCancel }: Fa
         <Label htmlFor="farm-note">Observação</Label>
         <Textarea id="farm-note" placeholder="Informações adicionais (opcional)" {...register("observacao")} />
         {errors.observacao ? <p className="text-sm text-red-600">{errors.observacao.message}</p> : null}
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="farm-distance">Distância até o frigorífico (km)</Label>
+          <Input id="farm-distance" inputMode="decimal" placeholder="0,00" aria-invalid={Boolean(errors.distancia_frigorifico)} aria-describedby={errors.distancia_frigorifico ? "farm-distance-error" : undefined} {...register("distancia_frigorifico")} />
+          {errors.distancia_frigorifico ? <p id="farm-distance-error" className="text-sm text-red-600">{errors.distancia_frigorifico.message}</p> : null}
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="farm-herd">Quantidade de animais</Label>
+          <Input id="farm-herd" inputMode="numeric" placeholder="0" aria-invalid={Boolean(errors.quantidade_rebanho)} aria-describedby={errors.quantidade_rebanho ? "farm-herd-error" : undefined} {...register("quantidade_rebanho")} />
+          {errors.quantidade_rebanho ? <p id="farm-herd-error" className="text-sm text-red-600">{errors.quantidade_rebanho.message}</p> : null}
+        </div>
       </div>
       {serverError ? <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{serverError}</p> : null}
       <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:justify-end">

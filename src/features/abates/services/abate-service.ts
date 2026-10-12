@@ -26,13 +26,16 @@ function createPayload(data: AbateFormData): CreateAbatePayload {
       fazenda_id: Number(data.fazenda_id),
       numero_lote: Number(data.numero_lote),
       nome_frigorifico: data.nome_frigorifico.trim(),
-      distancia_frigorifico: toNumber(data.distancia_frigorifico),
       categoria_animal: data.categoria_animal.trim(),
       preco_funrural: toNumber(data.preco_funrural),
       preco_sem_funrural: toNumber(data.preco_sem_funrural),
       observacao: "",
     },
   };
+
+  if (data.distancia_frigorifico.trim()) {
+    payload.dados_gerais.distancia_frigorifico = toNumber(data.distancia_frigorifico);
+  }
 
   if (data.incluir_etapa_fazenda) {
     payload.etapa_fazenda = {

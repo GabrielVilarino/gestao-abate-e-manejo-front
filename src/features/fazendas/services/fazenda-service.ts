@@ -8,6 +8,8 @@ function payload(data: FazendaFormData) {
     cidade: data.cidade.trim(),
     inscricao_rural: data.inscricao_rural.trim(),
     observacao: data.observacao.trim(),
+    distancia_frigorifico: Number(data.distancia_frigorifico.replace(",", ".")),
+    quantidade_rebanho: Number(data.quantidade_rebanho),
   };
 }
 

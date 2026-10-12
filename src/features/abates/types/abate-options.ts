@@ -7,6 +7,8 @@ export const ACABAMENTO_CARCACA_VALUES = [
   "MEDIANO UP",
 ] as const;
 
+export const DENTICAO_VALUES = [0, 2, 4, 6, 8] as const;
+
 export const CLASSIFICACAO_FRIGORIFICO_VALUES = [
   "BOI FRACO",
   "BOI LEVE",
@@ -22,5 +24,6 @@ export const DISTRIBUICAO_PESO_VALUES = [
 ] as const;
 
 export type AcabamentoCarcacaValue = (typeof ACABAMENTO_CARCACA_VALUES)[number];
+export type DenticaoValue = (typeof DENTICAO_VALUES)[number];
 export type ClassificacaoFrigorificoValue = (typeof CLASSIFICACAO_FRIGORIFICO_VALUES)[number];
 export type DistribuicaoPesoValue = (typeof DISTRIBUICAO_PESO_VALUES)[number];

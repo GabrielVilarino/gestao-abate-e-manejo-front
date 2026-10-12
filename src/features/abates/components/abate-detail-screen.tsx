@@ -109,7 +109,7 @@ function ValidAbateDetail({ numericId }: { numericId: number }) {
             <DataItem label="Fazenda" value={abate.nome_fazenda} />
             <DataItem label="Data" value={formatDate(general.data_abate)} />
             <DataItem label="Frigorífico" value={general.nome_frigorifico} />
-            <DataItem label="Distância" value={`${formatNumber(general.distancia_frigorifico)} km`} />
+            <DataItem label="Distância" value={general.distancia_frigorifico == null ? "Usa a distância da fazenda" : `${formatNumber(general.distancia_frigorifico)} km`} />
             <DataItem label="Categoria animal" value={general.categoria_animal} />
             <DataItem label="Preço com Funrural" value={formatCurrency(general.preco_funrural)} />
             <DataItem label="Preço sem Funrural" value={formatCurrency(general.preco_sem_funrural)} />

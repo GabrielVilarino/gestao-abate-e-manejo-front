@@ -4,6 +4,7 @@ import {
   ACABAMENTO_CARCACA_VALUES,
   CLASSIFICACAO_FRIGORIFICO_VALUES,
   DISTRIBUICAO_PESO_VALUES,
+  DENTICAO_VALUES,
 } from "@/features/abates/types/abate-options";
 
 const numericText = (message: string, options: { positive?: boolean; integer?: boolean } = {}) =>
@@ -24,7 +25,7 @@ const photoSchema = z
 export const etapaFazendaSchema = z.object({
   peso_total: numericText("Informe um peso total válido."),
   quantidade_animal: z.array(z.object({
-    denticao: numericText("Informe uma dentição válida.", { integer: true }),
+    denticao: z.string().trim().refine((value) => DENTICAO_VALUES.some((option) => String(option) === value), "Selecione uma dentição válida."),
     qtd_animais: numericText("Informe uma quantidade válida.", { integer: true }),
   })),
   fotos: z.array(photoSchema),

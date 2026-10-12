@@ -33,7 +33,7 @@ export type AbateDadosGerais = {
   fazenda_id: number;
   numero_lote: number;
   nome_frigorifico: string;
-  distancia_frigorifico: number;
+  distancia_frigorifico?: number | null;
   categoria_animal: string;
   preco_funrural: number;
   preco_sem_funrural: number;

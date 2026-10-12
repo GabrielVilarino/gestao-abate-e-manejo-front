@@ -4,6 +4,7 @@ import {
   ACABAMENTO_CARCACA_VALUES,
   CLASSIFICACAO_FRIGORIFICO_VALUES,
   DISTRIBUICAO_PESO_VALUES,
+  DENTICAO_VALUES,
 } from "@/features/abates/types/abate-options";
 
 const requiredText = (message: string) => z.string().trim().min(1, message);
@@ -44,7 +45,7 @@ const photoSchema = z
   .refine((file) => file.type.startsWith("image/"), "Selecione apenas arquivos de imagem.");
 
 const quantidadeAnimalSchema = z.object({
-  denticao: optionalStageNumber,
+  denticao: z.string().trim().refine((value) => DENTICAO_VALUES.some((option) => String(option) === value), "Selecione uma dentição válida."),
   qtd_animais: optionalStageNumber,
 });
 
@@ -71,7 +72,11 @@ export const abateSchema = z
     data_abate: dateText,
     numero_lote: positiveNumberText("Informe um lote inteiro e positivo.", true),
     nome_frigorifico: requiredText("Informe o nome do frigorífico."),
-    distancia_frigorifico: nonNegativeNumberText("Informe uma distância válida."),
+    distancia_frigorifico: z.string().trim().refine((value) => {
+      if (!value) return true;
+      const number = Number(value.replace(",", "."));
+      return Number.isFinite(number) && number >= 0;
+    }, "Informe uma distância válida."),
     categoria_animal: requiredText("Informe a categoria animal."),
     preco_funrural: nonNegativeNumberText("Informe um preço válido."),
     preco_sem_funrural: nonNegativeNumberText("Informe um preço válido."),

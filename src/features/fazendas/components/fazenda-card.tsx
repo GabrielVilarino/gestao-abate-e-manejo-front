@@ -33,6 +33,14 @@ export function FazendaCard({ fazenda, onEdit, onToggleStatus }: { fazenda: Faze
             <dt className="text-zinc-500">Situação</dt>
             <dd><Badge variant="outline" className={fazenda.ativo ? "border-emerald-200 bg-emerald-50 text-emerald-700" : "border-red-200 bg-red-50 text-red-700"}>{fazenda.ativo ? "Ativa" : "Inativa"}</Badge></dd>
           </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-zinc-500">Distância do frigorífico</dt>
+            <dd className="text-right font-medium text-zinc-800">{fazenda.distancia_frigorifico} km</dd>
+          </div>
+          <div className="flex justify-between gap-4">
+            <dt className="text-zinc-500">Rebanho</dt>
+            <dd className="text-right font-medium text-zinc-800">{fazenda.quantidade_rebanho} animais</dd>
+          </div>
         </dl>
         {fazenda.observacao ? <p className="mt-4 text-sm leading-6 text-zinc-600">{fazenda.observacao}</p> : null}
       </CardContent>

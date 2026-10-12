@@ -3,13 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle, Plus, Trash2, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useFieldArray, useForm, useWatch } from "react-hook-form";
+import { Controller, useFieldArray, useForm, useWatch } from "react-hook-form";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { PhotoPicker } from "@/features/abates/components/photo-picker";
 import {
   etapaFazendaSchema,
@@ -17,6 +18,7 @@ import {
 } from "@/features/abates/schemas/abate-stage-schema";
 import { abateService } from "@/features/abates/services/abate-service";
 import type { AbateEtapaFazenda } from "@/features/abates/types/abate";
+import { DENTICAO_VALUES } from "@/features/abates/types/abate-options";
 import { getErrorMessage } from "@/lib/api-client";
 
 type EtapaFazendaDialogProps = {
@@ -84,6 +86,7 @@ function EtapaFazendaForm({ abateId, etapa, onCancel, onSuccess, onLockChange }:
   const quantities = useFieldArray({ control, name: "quantidade_animal" });
   const photos = useWatch({ control, name: "fotos" });
   const locked = isSubmitting || (stageSaved && photos.length > 0);
+  const denticaoOptions = DENTICAO_VALUES.map((value) => ({ value: String(value), label: String(value) }));
 
   useEffect(() => {
     onLockChange(locked);
@@ -145,7 +148,7 @@ function EtapaFazendaForm({ abateId, etapa, onCancel, onSuccess, onLockChange }:
             {quantities.fields.length ? quantities.fields.map((field, index) => (
               <div key={field.id} className="grid gap-3 rounded-xl bg-zinc-50 p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
                 <Field label="Dentição" id={`edit-dentition-${index}`} error={errors.quantidade_animal?.[index]?.denticao?.message}>
-                  <Input id={`edit-dentition-${index}`} inputMode="numeric" className="h-10 bg-white" aria-invalid={Boolean(errors.quantidade_animal?.[index]?.denticao)} aria-describedby={errors.quantidade_animal?.[index]?.denticao ? `edit-dentition-${index}-error` : undefined} {...register(`quantidade_animal.${index}.denticao`)} />
+                  <Controller name={`quantidade_animal.${index}.denticao`} control={control} render={({ field: selectField }) => <Select id={`edit-dentition-${index}`} options={denticaoOptions} value={selectField.value} onValueChange={selectField.onChange} placeholder="Selecione" invalid={Boolean(errors.quantidade_animal?.[index]?.denticao)} describedBy={errors.quantidade_animal?.[index]?.denticao ? `edit-dentition-${index}-error` : undefined} className="bg-white" />} />
                 </Field>
                 <Field label="Quantidade" id={`edit-farm-quantity-${index}`} error={errors.quantidade_animal?.[index]?.qtd_animais?.message}>
                   <Input id={`edit-farm-quantity-${index}`} inputMode="numeric" className="h-10 bg-white" aria-invalid={Boolean(errors.quantidade_animal?.[index]?.qtd_animais)} aria-describedby={errors.quantidade_animal?.[index]?.qtd_animais ? `edit-farm-quantity-${index}-error` : undefined} {...register(`quantidade_animal.${index}.qtd_animais`)} />

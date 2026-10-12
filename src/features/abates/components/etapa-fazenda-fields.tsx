@@ -2,13 +2,17 @@
 
 import { Plus, Trash2 } from "lucide-react";
 import type { Control, FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
-import { useFieldArray, useWatch } from "react-hook-form";
+import { Controller, useFieldArray, useWatch } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { PhotoPicker } from "@/features/abates/components/photo-picker";
 import type { AbateFormData } from "@/features/abates/schemas/abate-schema";
+import { DENTICAO_VALUES } from "@/features/abates/types/abate-options";
+
+const denticaoOptions = DENTICAO_VALUES.map((value) => ({ value: String(value), label: String(value) }));
 
 type EtapaFazendaFieldsProps = {
   control: Control<AbateFormData>;
@@ -60,13 +64,10 @@ export function EtapaFazendaFields({ control, register, setValue, errors, disabl
               <div key={field.id} className="grid gap-3 rounded-xl bg-zinc-50 p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
                 <div className="space-y-2">
                   <Label htmlFor={`dentition-${index}`}>Dentição</Label>
-                  <Input
-                    id={`dentition-${index}`}
-                    inputMode="numeric"
-                    className="h-10 bg-white"
-                    aria-invalid={Boolean(errors.quantidade_animal?.[index]?.denticao)}
-                    aria-describedby={errors.quantidade_animal?.[index]?.denticao ? `dentition-${index}-error` : undefined}
-                    {...register(`quantidade_animal.${index}.denticao`)}
+                  <Controller
+                    name={`quantidade_animal.${index}.denticao`}
+                    control={control}
+                    render={({ field: selectField }) => <Select id={`dentition-${index}`} options={denticaoOptions} value={selectField.value} onValueChange={selectField.onChange} placeholder="Selecione" invalid={Boolean(errors.quantidade_animal?.[index]?.denticao)} describedBy={errors.quantidade_animal?.[index]?.denticao ? `dentition-${index}-error` : undefined} className="bg-white" />}
                   />
                   {errors.quantidade_animal?.[index]?.denticao ? <p id={`dentition-${index}-error`} className="text-sm text-red-600">{errors.quantidade_animal[index]?.denticao?.message}</p> : null}
                 </div>
