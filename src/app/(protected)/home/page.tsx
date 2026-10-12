@@ -1,4 +1,4 @@
-import { Beef, Building2, CalendarDays, ChevronRight, Info, ShieldCheck, UsersRound } from "lucide-react";
+import { BarChart3, Beef, Building2, CalendarDays, ChevronRight, Info, ShieldCheck, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { cookies } from "next/headers";
 
@@ -60,6 +60,17 @@ export default async function HomePage() {
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
+        <FeatureCard
+          href="/dashboard"
+          icon={<BarChart3 className="size-5" />}
+          title="Dashboard"
+          description="Acompanhe os principais indicadores da operação de abates."
+          items={[
+            "Visualize o total de abates e cabeças processadas.",
+            "Compare fazendas e categorias de animais.",
+            "Filtre os resultados por proprietário, fazenda e período.",
+          ]}
+        />
         <FeatureCard
           href="/proprietarios"
           icon={<Building2 className="size-5" />}

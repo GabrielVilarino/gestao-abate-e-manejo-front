@@ -1,6 +1,6 @@
 "use client";
 
-import { Beef, Building2, CalendarDays, LoaderCircle, LogOut, UsersRound } from "lucide-react";
+import { BarChart3, Beef, Building2, CalendarDays, LoaderCircle, LogOut, UsersRound } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -40,6 +40,7 @@ export function AppShell({ children, isAdmin }: { children: React.ReactNode; isA
   }
 
   const isOwners = pathname.startsWith("/proprietarios");
+  const isDashboard = pathname.startsWith("/dashboard");
   const isSlaughters = pathname.startsWith("/abates");
   const isSchedule = pathname.startsWith("/agenda");
   const isUsers = pathname.startsWith("/usuarios");
@@ -61,6 +62,18 @@ export function AppShell({ children, isAdmin }: { children: React.ReactNode; isA
       <main className="mx-auto w-full max-w-7xl px-4 pt-6 pb-[calc(5rem+env(safe-area-inset-bottom))] sm:px-6 sm:pt-8 sm:pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:px-8"><PushNotifications disabled={isLeaving} />{children}</main>
       <footer className="fixed bottom-0 left-0 z-40 w-full border-t bg-background py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] text-center">
         <nav aria-label="Navegação principal" className="flex items-center justify-around sm:justify-center gap-1 sm:gap-2">
+          <Link
+            href="/dashboard"
+            aria-label="Dashboard"
+            aria-current={isDashboard ? "page" : undefined}
+            className={cn(
+              "inline-flex min-h-11 items-center gap-2 rounded-xl px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
+              isDashboard ? "bg-orange-50 text-orange-700" : "text-zinc-600 hover:bg-zinc-100",
+            )}
+          >
+            <BarChart3 className="size-5" />
+            <span className="hidden sm:inline">Dashboard</span>
+          </Link>
           <Link
             href="/proprietarios"
             aria-current={isOwners ? "page" : undefined}
