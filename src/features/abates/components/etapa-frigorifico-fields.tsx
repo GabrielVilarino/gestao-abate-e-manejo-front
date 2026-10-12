@@ -14,11 +14,13 @@ import {
   ACABAMENTO_CARCACA_VALUES,
   CLASSIFICACAO_FRIGORIFICO_VALUES,
   DISTRIBUICAO_PESO_VALUES,
+  DENTICAO_VALUES,
 } from "@/features/abates/types/abate-options";
 
 const acabamentoOptions = ACABAMENTO_CARCACA_VALUES.map((value) => ({ value, label: value }));
 const classificacaoOptions = CLASSIFICACAO_FRIGORIFICO_VALUES.map((value) => ({ value, label: value }));
 const distribuicaoOptions = DISTRIBUICAO_PESO_VALUES.map((value) => ({ value, label: value }));
+const denticaoOptions = DENTICAO_VALUES.map((value) => ({ value: String(value), label: String(value) }));
 
 type EtapaFrigorificoFieldsProps = {
   control: Control<AbateFormData>;
@@ -30,6 +32,7 @@ type EtapaFrigorificoFieldsProps = {
 
 export function EtapaFrigorificoFields({ control, register, setValue, errors, disabled }: EtapaFrigorificoFieldsProps) {
   const acabamento = useFieldArray({ control, name: "acabamento_carcaca" });
+  const quantities = useFieldArray({ control, name: "quantidade_animal" });
   const classificacao = useFieldArray({ control, name: "classificacao_frigorifico" });
   const distribuicao = useFieldArray({ control, name: "distribuicao_peso" });
   const photos = useWatch({ control, name: "fotos_frigorifico" });
@@ -45,10 +48,24 @@ export function EtapaFrigorificoFields({ control, register, setValue, errors, di
         <Field label="Peso total" id="plant-total-weight" error={errors.peso_total_frigorifico?.message}>
           <Input id="plant-total-weight" inputMode="decimal" placeholder="0,00" className="h-10" aria-invalid={Boolean(errors.peso_total_frigorifico)} aria-describedby={errors.peso_total_frigorifico ? "plant-total-weight-error" : undefined} {...register("peso_total_frigorifico")} />
         </Field>
-        <Field label="Balancão" id="scale-weight" error={errors.balancao?.message}>
+        <Field label="Balanção" id="scale-weight" error={errors.balancao?.message}>
           <Input id="scale-weight" inputMode="decimal" placeholder="0,00" className="h-10" aria-invalid={Boolean(errors.balancao)} aria-describedby={errors.balancao ? "scale-weight-error" : undefined} {...register("balancao")} />
         </Field>
       </div>
+
+      <ArraySection title="Quantidade por dentição" onAdd={() => quantities.append({ denticao: "", qtd_animais: "" })} disabled={disabled} empty={quantities.fields.length === 0}>
+        {quantities.fields.map((field, index) => (
+          <div key={field.id} className="grid gap-3 rounded-xl bg-zinc-50 p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
+            <Field label="Dentição" id={`dentition-${index}`} error={errors.quantidade_animal?.[index]?.denticao?.message}>
+              <Controller name={`quantidade_animal.${index}.denticao`} control={control} render={({ field: selectField }) => <Select id={`dentition-${index}`} options={denticaoOptions} value={selectField.value} onValueChange={selectField.onChange} placeholder="Selecione" invalid={Boolean(errors.quantidade_animal?.[index]?.denticao)} describedBy={errors.quantidade_animal?.[index]?.denticao ? `dentition-${index}-error` : undefined} className="bg-white" />} />
+            </Field>
+            <Field label="Quantidade" id={`animal-quantity-${index}`} error={errors.quantidade_animal?.[index]?.qtd_animais?.message}>
+              <Input id={`animal-quantity-${index}`} inputMode="numeric" className="h-10 bg-white" aria-invalid={Boolean(errors.quantidade_animal?.[index]?.qtd_animais)} aria-describedby={errors.quantidade_animal?.[index]?.qtd_animais ? `animal-quantity-${index}-error` : undefined} {...register(`quantidade_animal.${index}.qtd_animais`)} />
+            </Field>
+            <RemoveButton label={`Remover faixa ${index + 1}`} disabled={disabled} onClick={() => quantities.remove(index)} />
+          </div>
+        ))}
+      </ArraySection>
 
       <ArraySection title="Acabamento de carcaça" onAdd={() => acabamento.append({ acabamento: ACABAMENTO_CARCACA_VALUES[0], qtd_animais: "" })} disabled={disabled} empty={acabamento.fields.length === 0}>
         {acabamento.fields.map((field, index) => (

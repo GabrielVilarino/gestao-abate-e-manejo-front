@@ -6,9 +6,7 @@ import { formatDate } from "@/features/abates/schemas/abate-formatters";
 import type { Abate } from "@/features/abates/types/abate";
 
 function animalCount(abate: Abate) {
-  const quantities = abate.etapa_fazenda?.quantidade_animal ?? [];
-  if (!quantities.length) return undefined;
-  return quantities.reduce((total, item) => total + item.qtd_animais, 0);
+  return abate.etapa_fazenda?.quantidade_total_cabecas;
 }
 
 export function AbateCard({ abate }: { abate: Abate }) {

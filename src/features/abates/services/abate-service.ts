@@ -39,11 +39,8 @@ function createPayload(data: AbateFormData): CreateAbatePayload {
 
   if (data.incluir_etapa_fazenda) {
     payload.etapa_fazenda = {
+      quantidade_total_cabecas: toNumber(data.quantidade_total_cabecas_fazenda),
       peso_total: toNumber(data.peso_total_fazenda),
-      quantidade_animal: data.quantidade_animal.map((item) => ({
-        denticao: toNumber(item.denticao),
-        qtd_animais: toNumber(item.qtd_animais),
-      })),
     };
   }
 
@@ -51,6 +48,10 @@ function createPayload(data: AbateFormData): CreateAbatePayload {
     payload.etapa_frigorifico = {
       peso_total: toNumber(data.peso_total_frigorifico),
       balancao: toNumber(data.balancao),
+      quantidade_animal: data.quantidade_animal.map((item) => ({
+        denticao: toNumber(item.denticao),
+        qtd_animais: toNumber(item.qtd_animais),
+      })),
       acabamento_carcaca: data.acabamento_carcaca.map((item) => ({
         acabamento: item.acabamento,
         qtd_animais: toNumber(item.qtd_animais),
@@ -120,11 +121,8 @@ export const abateService = {
     return apiFetch<{ message: string }>(`/v1/abate/${id}/etapa-fazenda`, {
       method: "PUT",
       body: JSON.stringify({
+        quantidade_total_cabecas: toNumber(data.quantidade_total_cabecas),
         peso_total: toNumber(data.peso_total),
-        quantidade_animal: data.quantidade_animal.map((item) => ({
-          denticao: toNumber(item.denticao),
-          qtd_animais: toNumber(item.qtd_animais),
-        })),
       }),
     });
   },
@@ -143,6 +141,10 @@ export const abateService = {
       body: JSON.stringify({
         peso_total: toNumber(data.peso_total),
         balancao: toNumber(data.balancao),
+        quantidade_animal: data.quantidade_animal.map((item) => ({
+          denticao: toNumber(item.denticao),
+          qtd_animais: toNumber(item.qtd_animais),
+        })),
         acabamento_carcaca: data.acabamento_carcaca.map((item) => ({
           acabamento: item.acabamento,
           qtd_animais: toNumber(item.qtd_animais),

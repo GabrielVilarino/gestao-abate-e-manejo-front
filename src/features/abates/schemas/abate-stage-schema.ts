@@ -6,6 +6,7 @@ import {
   DISTRIBUICAO_PESO_VALUES,
   DENTICAO_VALUES,
 } from "@/features/abates/types/abate-options";
+import { mediaFileSchema } from "@/features/abates/schemas/abate-media-schema";
 
 const numericText = (message: string, options: { positive?: boolean; integer?: boolean } = {}) =>
   z.string().trim().min(1, message).refine((value) => {
@@ -14,26 +15,19 @@ const numericText = (message: string, options: { positive?: boolean; integer?: b
     return Number.isFinite(number) && validLimit && (!options.integer || Number.isInteger(number));
   }, message);
 
-const photoSchema = z
-  .custom<File>(
-    (value) => typeof File !== "undefined" && value instanceof File,
-    "Selecione um arquivo válido.",
-  )
-  .refine((file) => file.size <= 10 * 1024 * 1024, "Cada foto deve ter no máximo 10 MiB.")
-  .refine((file) => file.type.startsWith("image/"), "Selecione apenas arquivos de imagem.");
-
 export const etapaFazendaSchema = z.object({
+  quantidade_total_cabecas: numericText("Informe a quantidade total de cabeças.", { integer: true }),
   peso_total: numericText("Informe um peso total válido."),
-  quantidade_animal: z.array(z.object({
-    denticao: z.string().trim().refine((value) => DENTICAO_VALUES.some((option) => String(option) === value), "Selecione uma dentição válida."),
-    qtd_animais: numericText("Informe uma quantidade válida.", { integer: true }),
-  })),
-  fotos: z.array(photoSchema),
+  fotos: z.array(mediaFileSchema),
 });
 
 export const etapaFrigorificoSchema = z.object({
   peso_total: numericText("Informe um peso total válido."),
-  balancao: numericText("Informe um valor de balancão válido."),
+  balancao: numericText("Informe um valor de balanção válido."),
+  quantidade_animal: z.array(z.object({
+    denticao: z.string().trim().refine((value) => DENTICAO_VALUES.some((option) => String(option) === value), "Selecione uma dentição válida."),
+    qtd_animais: numericText("Informe uma quantidade válida.", { integer: true }),
+  })),
   acabamento_carcaca: z.array(z.object({
     acabamento: z.enum(ACABAMENTO_CARCACA_VALUES, "Informe o acabamento."),
     qtd_animais: numericText("Informe uma quantidade válida.", { integer: true }),
@@ -47,7 +41,7 @@ export const etapaFrigorificoSchema = z.object({
     qtd_animais: numericText("Informe uma quantidade válida.", { integer: true }),
     peso_total: numericText("Informe um peso válido."),
   })),
-  fotos: z.array(photoSchema),
+  fotos: z.array(mediaFileSchema),
 });
 
 export type EtapaFazendaFormData = z.infer<typeof etapaFazendaSchema>;

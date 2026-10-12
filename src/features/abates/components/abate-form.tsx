@@ -26,6 +26,7 @@ const defaultValues: AbateFormData = {
   preco_funrural: "",
   preco_sem_funrural: "",
   incluir_etapa_fazenda: false,
+  quantidade_total_cabecas_fazenda: "",
   peso_total_fazenda: "",
   quantidade_animal: [],
   fotos_fazenda: [],

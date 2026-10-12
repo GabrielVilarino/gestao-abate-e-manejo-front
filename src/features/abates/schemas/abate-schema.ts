@@ -6,6 +6,7 @@ import {
   DISTRIBUICAO_PESO_VALUES,
   DENTICAO_VALUES,
 } from "@/features/abates/types/abate-options";
+import { mediaFileSchema } from "@/features/abates/schemas/abate-media-schema";
 
 const requiredText = (message: string) => z.string().trim().min(1, message);
 
@@ -35,14 +36,6 @@ const dateText = requiredText("Informe a data do abate.").refine(isValidDate, "I
 const optionalDateText = z.string().refine((value) => !value || isValidDate(value), "Informe uma data válida.");
 
 const optionalStageNumber = z.string().trim();
-
-const photoSchema = z
-  .custom<File>(
-    (value) => typeof File !== "undefined" && value instanceof File,
-    "Selecione um arquivo válido.",
-  )
-  .refine((file) => file.size <= 10 * 1024 * 1024, "Cada foto deve ter no máximo 10 MiB.")
-  .refine((file) => file.type.startsWith("image/"), "Selecione apenas arquivos de imagem.");
 
 const quantidadeAnimalSchema = z.object({
   denticao: z.string().trim().refine((value) => DENTICAO_VALUES.some((option) => String(option) === value), "Selecione uma dentição válida."),
@@ -81,29 +74,30 @@ export const abateSchema = z
     preco_funrural: nonNegativeNumberText("Informe um preço válido."),
     preco_sem_funrural: nonNegativeNumberText("Informe um preço válido."),
     incluir_etapa_fazenda: z.boolean(),
+    quantidade_total_cabecas_fazenda: optionalStageNumber,
     peso_total_fazenda: optionalStageNumber,
     quantidade_animal: z.array(quantidadeAnimalSchema),
-    fotos_fazenda: z.array(photoSchema),
+    fotos_fazenda: z.array(mediaFileSchema),
     incluir_etapa_frigorifico: z.boolean(),
     peso_total_frigorifico: optionalStageNumber,
     balancao: optionalStageNumber,
     acabamento_carcaca: z.array(acabamentoCarcacaSchema),
     classificacao_frigorifico: z.array(classificacaoFrigorificoSchema),
     distribuicao_peso: z.array(distribuicaoPesoSchema),
-    fotos_frigorifico: z.array(photoSchema),
+    fotos_frigorifico: z.array(mediaFileSchema),
   })
   .superRefine((data, context) => {
     if (data.incluir_etapa_fazenda) {
       validateNonNegative(data.peso_total_fazenda, ["peso_total_fazenda"], "Informe o peso total da fazenda.", context);
-      data.quantidade_animal.forEach((item, index) => {
-        validateNonNegative(item.denticao, ["quantidade_animal", index, "denticao"], "Informe uma dentição válida.", context, true);
-        validateNonNegative(item.qtd_animais, ["quantidade_animal", index, "qtd_animais"], "Informe uma quantidade válida.", context, true);
-      });
+      validateNonNegative(data.quantidade_total_cabecas_fazenda, ["quantidade_total_cabecas_fazenda"], "Informe a quantidade total de cabeças.", context, true);
     }
 
     if (data.incluir_etapa_frigorifico) {
       validateNonNegative(data.peso_total_frigorifico, ["peso_total_frigorifico"], "Informe o peso total do frigorífico.", context);
-      validateNonNegative(data.balancao, ["balancao"], "Informe um valor de balancão válido.", context);
+      validateNonNegative(data.balancao, ["balancao"], "Informe um valor de balanção válido.", context);
+      data.quantidade_animal.forEach((item, index) => {
+        validateNonNegative(item.qtd_animais, ["quantidade_animal", index, "qtd_animais"], "Informe uma quantidade válida.", context, true);
+      });
       data.acabamento_carcaca.forEach((item, index) => {
         validateNonNegative(item.qtd_animais, ["acabamento_carcaca", index, "qtd_animais"], "Informe uma quantidade válida.", context, true);
       });

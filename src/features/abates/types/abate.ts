@@ -41,14 +41,15 @@ export type AbateDadosGerais = {
 };
 
 export type AbateEtapaFazenda = {
+  quantidade_total_cabecas: number;
   peso_total: number;
-  quantidade_animal: QuantidadeAnimal[];
   fotos: AbateFoto[];
 };
 
 export type AbateEtapaFrigorifico = {
   peso_total: number;
   balancao: number;
+  quantidade_animal: QuantidadeAnimal[];
   acabamento_carcaca: AcabamentoCarcaca[];
   classificacao_frigorifico: ClassificacaoFrigorifico[];
   distribuicao_peso: DistribuicaoPeso[];

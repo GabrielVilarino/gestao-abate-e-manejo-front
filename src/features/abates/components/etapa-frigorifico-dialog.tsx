@@ -22,12 +22,14 @@ import {
   ACABAMENTO_CARCACA_VALUES,
   CLASSIFICACAO_FRIGORIFICO_VALUES,
   DISTRIBUICAO_PESO_VALUES,
+  DENTICAO_VALUES,
 } from "@/features/abates/types/abate-options";
 import { getErrorMessage } from "@/lib/api-client";
 
 const acabamentoOptions = ACABAMENTO_CARCACA_VALUES.map((value) => ({ value, label: value }));
 const classificacaoOptions = CLASSIFICACAO_FRIGORIFICO_VALUES.map((value) => ({ value, label: value }));
 const distribuicaoOptions = DISTRIBUICAO_PESO_VALUES.map((value) => ({ value, label: value }));
+const denticaoOptions = DENTICAO_VALUES.map((value) => ({ value: String(value), label: String(value) }));
 
 type EtapaFrigorificoDialogProps = {
   open: boolean;
@@ -85,6 +87,7 @@ function EtapaFrigorificoForm({ abateId, etapa, onCancel, onSuccess, onLockChang
     defaultValues: {
       peso_total: etapa ? String(etapa.peso_total) : "",
       balancao: etapa ? String(etapa.balancao) : "",
+      quantidade_animal: (etapa?.quantidade_animal ?? []).map((item) => ({ denticao: String(item.denticao), qtd_animais: String(item.qtd_animais) })),
       acabamento_carcaca: (etapa?.acabamento_carcaca ?? []).map((item) => ({ acabamento: item.acabamento, qtd_animais: String(item.qtd_animais) })),
       classificacao_frigorifico: (etapa?.classificacao_frigorifico ?? []).map((item) => ({ classificacao: item.classificacao, qtd_animais: String(item.qtd_animais) })),
       distribuicao_peso: (etapa?.distribuicao_peso ?? []).map((item) => ({ classificacao: item.classificacao, qtd_animais: String(item.qtd_animais), peso_total: String(item.peso_total) })),
@@ -92,6 +95,7 @@ function EtapaFrigorificoForm({ abateId, etapa, onCancel, onSuccess, onLockChang
     },
   });
   const finishes = useFieldArray({ control, name: "acabamento_carcaca" });
+  const quantities = useFieldArray({ control, name: "quantidade_animal" });
   const classifications = useFieldArray({ control, name: "classificacao_frigorifico" });
   const weights = useFieldArray({ control, name: "distribuicao_peso" });
   const photos = useWatch({ control, name: "fotos" });
@@ -149,10 +153,20 @@ function EtapaFrigorificoForm({ abateId, etapa, onCancel, onSuccess, onLockChang
             <Field label="Peso total" id="edit-plant-weight" error={errors.peso_total?.message}>
               <Input id="edit-plant-weight" inputMode="decimal" className="h-10" aria-invalid={Boolean(errors.peso_total)} aria-describedby={errors.peso_total ? "edit-plant-weight-error" : undefined} {...register("peso_total")} />
             </Field>
-            <Field label="Balancão" id="edit-scale-weight" error={errors.balancao?.message}>
+            <Field label="Balanção" id="edit-scale-weight" error={errors.balancao?.message}>
               <Input id="edit-scale-weight" inputMode="decimal" className="h-10" aria-invalid={Boolean(errors.balancao)} aria-describedby={errors.balancao ? "edit-scale-weight-error" : undefined} {...register("balancao")} />
             </Field>
           </div>
+
+          <Collection title="Quantidade por dentição" empty={quantities.fields.length === 0} onAdd={() => quantities.append({ denticao: "", qtd_animais: "" })}>
+            {quantities.fields.map((field, index) => (
+              <div key={field.id} className="grid gap-3 rounded-xl bg-zinc-50 p-3 sm:grid-cols-[1fr_1fr_auto] sm:items-start">
+                <Field label="Dentição" id={`edit-dentition-${index}`} error={errors.quantidade_animal?.[index]?.denticao?.message}><Controller name={`quantidade_animal.${index}.denticao`} control={control} render={({ field: selectField }) => <Select id={`edit-dentition-${index}`} options={denticaoOptions} value={selectField.value} onValueChange={selectField.onChange} placeholder="Selecione" invalid={Boolean(errors.quantidade_animal?.[index]?.denticao)} describedBy={errors.quantidade_animal?.[index]?.denticao ? `edit-dentition-${index}-error` : undefined} className="bg-white" />} /></Field>
+                <Field label="Quantidade" id={`edit-animal-quantity-${index}`} error={errors.quantidade_animal?.[index]?.qtd_animais?.message}><Input id={`edit-animal-quantity-${index}`} inputMode="numeric" className="h-10 bg-white" aria-invalid={Boolean(errors.quantidade_animal?.[index]?.qtd_animais)} {...register(`quantidade_animal.${index}.qtd_animais`)} /></Field>
+                <RemoveButton label={`Remover faixa ${index + 1}`} onClick={() => quantities.remove(index)} />
+              </div>
+            ))}
+          </Collection>
 
           <Collection title="Acabamento de carcaça" empty={finishes.fields.length === 0} onAdd={() => finishes.append({ acabamento: ACABAMENTO_CARCACA_VALUES[0], qtd_animais: "" })}>
             {finishes.fields.map((field, index) => (

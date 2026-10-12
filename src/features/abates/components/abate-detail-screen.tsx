@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Camera, Download, FileDown, LoaderCircle, MapPin, MessageSquareText, Pencil, Plus, Scale, UsersRound } from "lucide-react";
+import { ArrowLeft, Camera, Download, FileDown, Film, LoaderCircle, MapPin, MessageSquareText, Pencil, Plus, Scale, UsersRound } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -125,11 +125,7 @@ function ValidAbateDetail({ numericId }: { numericId: number }) {
           </CardHeader>
           <CardContent className="space-y-5">
             <DataItem label="Peso total" value={`${formatNumber(abate.etapa_fazenda.peso_total)} kg`} />
-            <DetailTable
-              title="Quantidade por dentição"
-              headers={["Dentição", "Quantidade"]}
-              rows={(abate.etapa_fazenda.quantidade_animal ?? []).map((item) => [String(item.denticao), String(item.qtd_animais)])}
-            />
+            <DataItem label="Quantidade total de cabeças" value={String(abate.etapa_fazenda.quantidade_total_cabecas)} />
             <PhotoList photos={abate.etapa_fazenda.fotos ?? []} />
           </CardContent>
         </Card>
@@ -144,8 +140,9 @@ function ValidAbateDetail({ numericId }: { numericId: number }) {
           <CardContent className="space-y-5">
             <dl className="grid gap-4 sm:grid-cols-2">
               <DataItem label="Peso total" value={`${formatNumber(abate.etapa_frigorifico.peso_total)} kg`} />
-              <DataItem label="Balancão" value={`${formatNumber(abate.etapa_frigorifico.balancao)} kg`} />
+              <DataItem label="Balanção" value={`${formatNumber(abate.etapa_frigorifico.balancao)} kg`} />
             </dl>
+            <DetailTable title="Quantidade por dentição" headers={["Dentição", "Quantidade"]} rows={(abate.etapa_frigorifico.quantidade_animal ?? []).map((item) => [String(item.denticao), String(item.qtd_animais)])} />
             <DetailTable title="Acabamento de carcaça" headers={["Acabamento", "Quantidade"]} rows={(abate.etapa_frigorifico.acabamento_carcaca ?? []).map((item) => [item.acabamento, String(item.qtd_animais)])} />
             <DetailTable title="Classificação do frigorífico" headers={["Classificação", "Quantidade"]} rows={(abate.etapa_frigorifico.classificacao_frigorifico ?? []).map((item) => [item.classificacao, String(item.qtd_animais)])} />
             <DetailTable title="Distribuição de peso" headers={["Classificação", "Quantidade", "Peso total"]} rows={(abate.etapa_frigorifico.distribuicao_peso ?? []).map((item) => [item.classificacao, String(item.qtd_animais), `${formatNumber(item.peso_total)} kg`])} />
@@ -208,18 +205,18 @@ function DetailTable({ title, headers, rows }: { title: string; headers: string[
 function PhotoList({ photos }: { photos: AbateFoto[] }) {
   return (
     <section>
-      <h3 className="mb-2 text-sm font-semibold text-zinc-900">Fotos</h3>
+      <h3 className="mb-2 text-sm font-semibold text-zinc-900">Arquivos</h3>
       {photos.length ? (
         <ul className="grid gap-2 sm:grid-cols-2">
           {photos.map((photo) => (
             <li key={photo.id} className="flex items-center gap-3 rounded-xl border p-3">
-              <Camera className="size-5 shrink-0 text-orange-500" />
+              {photo.content_type.startsWith("video/") ? <Film className="size-5 shrink-0 text-orange-500" /> : <Camera className="size-5 shrink-0 text-orange-500" />}
               <div className="min-w-0 flex-1"><p className="truncate text-sm font-medium">{photo.nome_original}</p><p className="text-xs text-zinc-500">{formatFileSize(photo.tamanho)}</p></div>
               <Button nativeButton={false} render={<a href={`/api/backend/v1/abate/fotos/${photo.id}`} download />} variant="ghost" size="icon" aria-label={`Baixar ${photo.nome_original}`}><Download className="size-4" /></Button>
             </li>
           ))}
         </ul>
-      ) : <p className="rounded-xl bg-zinc-50 px-3 py-4 text-sm text-zinc-500">Nenhuma foto enviada.</p>}
+      ) : <p className="rounded-xl bg-zinc-50 px-3 py-4 text-sm text-zinc-500">Nenhum arquivo enviado.</p>}
     </section>
   );
 }

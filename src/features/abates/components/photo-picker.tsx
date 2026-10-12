@@ -1,6 +1,6 @@
 "use client";
 
-import { Camera, Images, LoaderCircle, RefreshCw, X } from "lucide-react";
+import { Camera, Film, Images, LoaderCircle, RefreshCw, X } from "lucide-react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -147,7 +147,7 @@ export function PhotoPicker({ label, files, onChange, error, disabled }: PhotoPi
         ref={fileInputRef}
         id={id}
         type="file"
-        accept="image/*"
+        accept="image/*,video/mp4,video/webm"
         multiple
         disabled={disabled}
         aria-invalid={Boolean(error)}
@@ -160,19 +160,19 @@ export function PhotoPicker({ label, files, onChange, error, disabled }: PhotoPi
       />
       <div className="flex flex-col gap-2 sm:flex-row">
         <Button type="button" variant="outline" className="h-10" disabled={disabled} onClick={() => fileInputRef.current?.click()}>
-          <Images className="size-4" /> Selecionar fotos
+          <Images className="size-4" /> Selecionar arquivos
         </Button>
         <Button type="button" variant="outline" className="h-10" disabled={disabled} onClick={openCamera}>
           <Camera className="size-4" /> Tirar foto
         </Button>
       </div>
-      <p className="text-xs text-zinc-500">Imagens de até 10 MiB cada.</p>
+      <p className="text-xs text-zinc-500">Imagens de até 10 MiB e vídeos MP4 ou WebM de até 50 MiB cada.</p>
       {error ? <p id={errorId} className="text-sm text-red-600">{error}</p> : null}
       {files.length ? (
         <ul className="space-y-1 rounded-lg bg-zinc-50 p-2 text-sm text-zinc-600">
           {files.map((file, index) => (
             <li key={`${file.name}-${file.lastModified}-${index}`} className="flex items-center gap-2">
-              <Camera className="size-4 shrink-0 text-orange-500" />
+              {file.type.startsWith("video/") ? <Film className="size-4 shrink-0 text-orange-500" /> : <Camera className="size-4 shrink-0 text-orange-500" />}
               <span className="min-w-0 flex-1 truncate">{file.name}</span>
               {!disabled ? (
                 <Button
