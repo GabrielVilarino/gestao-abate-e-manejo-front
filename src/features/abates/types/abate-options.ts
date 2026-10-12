@@ -1,10 +1,10 @@
 export const ACABAMENTO_CARCACA_VALUES = [
   "AUSENTE",
   "ESCASSO",
+  "ESCASSO POSITIVA",
   "MEDIANO",
   "UNIFORME",
   "EXCESSIVO",
-  "MEDIANO UP",
 ] as const;
 
 export const DENTICAO_VALUES = [0, 2, 4, 6, 8] as const;
